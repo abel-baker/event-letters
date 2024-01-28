@@ -36,11 +36,6 @@ class Game {
     this.playerQueue = new Map();
 
     this.players = new Set();
-
-    // this.pastInvitations = [];
-    // this.lastInvitation;
-
-    // this.newRound();
   }
 
   get address() {
@@ -79,6 +74,7 @@ class Game {
     const playersToAdd = Array.from(this.playerQueue.values()).slice(0, config.rules.max_group_size);
     for (const player of playersToAdd) {
       this.players.add(player);
+      console.log(`Adding player`, player.nickname);
     }
 
     // await Ready check of some kind?
@@ -138,7 +134,7 @@ class Game {
     // send new round message?
   }
 
-  // begin hand
+  // begin hand // TODO rename--this is a bad function title for starting a new round
   start() {
     this.status = 'active';
 
@@ -192,6 +188,7 @@ class Game {
   }
 
 
+
   ///// PLAYER FUNCTIONS /////
 
   // join the queue (or an open game) to play
@@ -209,16 +206,6 @@ class Game {
 
       return false;
     }
-
-    // if (this.players.has(member)) {
-    //   if (config.debug) {
-    //     const fakeMember = { ...member, nickname: `fake ${member.nickname}` };
-    //     this.playerQueue.set(fakeMember, new Player(fakeMember));
-    //     this.players.set(fakeMember, new Player(fakeMember));
-    //     return true;
-    //   }
-    //   return false;
-    // }
 
     // otherwise, proceed to add the new member to player queue
     // this.players.set(member, new Player(member));
@@ -243,7 +230,7 @@ class Game {
 
   // removes the specified member from the game, performing necessary logic to resolve losing them.
   leaveGame(member) {
-    const player = this.MemberIsPlaying(member);
+    const player = this.memberIsPlaying(member);
     if (player) {
       //TODO
       // remove from this.players
@@ -255,36 +242,18 @@ class Game {
     return false;
   }
 
-  /* here */
-
   // returns an array of members with a corresponding Player object
   playing() {
     const playing = Array.from(this.players, player => player.member);
     return playing;
   }
 
-  // not needed anymore since the leave queue is removed 
-  // refreshPlayers() {
-  //   // Remove any players who left before this round
-  //   for (let queuedMember of this.queueLeave) {
-  //     this.players.delete(queuedMember);
-  //   }
-  //   this.queueLeave = new Set();
-
-  //   // Add any players who joined during a hand
-  //   for (let queuedMember of this.queueJoin) {
-  //     // future: lookup member for existing Player object, or check db, and use that instead
-  //     this.players.set(queuedMember, new Player(member));
-  //   }
-  //   this.queueJoin = new Set();
-  // }
-
   isPlaying(query) {
     // Allow either a GuildMember or a Player as query
     return this.players.has(query) || [...this.players.values()].includes(query);
   }
   // check this.players for a Player object matching the member argument
-  MemberIsPlaying(member) {
+  memberIsPlaying(member) {
     for (let player of this.players) {
       if (member === player.member) {
         return player;
