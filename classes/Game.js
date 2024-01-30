@@ -22,11 +22,14 @@ const { Card } = require('./Card');
 */
 
 class Game {
-  constructor(guild, channel) {
+  constructor(client, guild, channel) {
     this.status = 'setup';
 
+    this.client = client;
     this.guild = guild;
     this.channel = channel;
+
+    this.invitationMessage;
 
     // console.log(`Creating new game in ${this.address}`);
 
@@ -36,6 +39,7 @@ class Game {
     this.playerQueue = new Map();
 
     this.players = new Set();
+    this.memberLastInteractions = new Map();
   }
 
   get address() {
@@ -60,6 +64,7 @@ class Game {
   }
 
   /* Prepare the Game object to play a game. */
+  // called by event listener 'startGame' currently
   beginGame() {
     this.status = 'starting';
     
@@ -79,7 +84,8 @@ class Game {
 
     // await Ready check of some kind?
 
-    this.beginRound();
+    // this.beginRound();
+    this.client.emit('gameSetupCompleted',this);
   }
   
   /* Begin one round of play */
@@ -106,6 +112,13 @@ class Game {
         this.faceup.push(this.deck.pop());
       }
     }
+
+    // Deal a card to each player  
+    for (let player of this.players) {
+      this.deal(player);
+    }
+
+    this.client.emit('roundSetupCompleted',this);
 
     // ...
 

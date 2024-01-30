@@ -1,5 +1,4 @@
 const config = require('../config.json');
-const { Verify } = require('../utils/check');
 const { SlashCommandBuilder } = require('discord.js');
 const Game = require('../classes/Game');
 const inviteEmbed = require('../components/invite/inviteEmbed');
@@ -18,7 +17,7 @@ const slashNewGame = {
     // TODO Confirm there is not already a game running elsewhere;
     // ephemeral reply to the interaction member to confirm
 
-    const game = new Game(guild, channel);
+    const game = new Game(client, guild, channel);
 
     // set game to client map
     client.games.set(address, game);
@@ -35,6 +34,9 @@ const slashNewGame = {
       components: [row],
       embeds: [newEmbed],
     });
+
+    const reply = await interaction.fetchReply();
+    game.invitationMessage = reply;
   }
 };
 
