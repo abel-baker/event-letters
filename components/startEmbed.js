@@ -9,7 +9,7 @@ const embed = (interaction) => {
   const startingPlayer = game.currentPlayer();
   const nextPlayer = game.nextPlayer();
   
-  const playing = prettyJoin(game.playing().map(player => `**${player.nickname}**`));
+  const playing = prettyJoin(game.playing().map(player => `**${player.displayName}**`));
 
   const out = {
     color: config.embed_color,

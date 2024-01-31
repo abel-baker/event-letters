@@ -33,8 +33,8 @@ const replyToJoin = {
       const newButtons = inviteButtons(interaction);
 
       game.memberLastInteractions.set(interaction.member, interaction);
-      console.log(game.memberLastInteractions);
-            
+      // console.log(game.memberLastInteractions);
+
       await interaction.update({ embeds: [newEmbed], components: [newButtons] });
     } else {
       await interaction.reply({ content: `Unable to join; is there a game and are you already playing it?`, ephemeral: true });

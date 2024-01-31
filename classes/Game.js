@@ -89,7 +89,7 @@ class Game {
   }
   
   /* Begin one round of play */
-  beginRound() {
+  beginRound(firstRound) {
     this.status = 'dealing';
 
     // Determine starting Player by some mechanism (won last hand, always the same Player, etc)
@@ -118,7 +118,7 @@ class Game {
       this.deal(player);
     }
 
-    this.client.emit('roundSetupCompleted',this);
+    this.client.emit(firstRound ? 'firstRoundSetupCompleted' : 'roundSetupCompleted', this);
 
     // ...
 
@@ -209,7 +209,7 @@ class Game {
     // if member is already queued, disallow them being added again (unless debug is active)
     if (this.playerQueue.has(member)) {
       if (config.debug) {
-        const fakeMember = { ...member, nickname: `fake ${member.nickname} ${this.playerQueue.size}`};
+        const fakeMember = { ...member, displayName: `fake ${member.displayName} ${this.playerQueue.size}`};
         const fakePlayer = new Player(fakeMember);
         // console.log("Attempting to join", fakeMember, fakePlayer)
         this.playerQueue.set(fakeMember, fakePlayer);

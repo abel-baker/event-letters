@@ -12,10 +12,13 @@ class Player {
   }
 
   get displayName() {
-    return this.member.nickname;
+    return this.member.displayName;
   }
   get nickname() {
     return this.member.nickname;
+  }
+  get mention() {
+    return `${this.member}`
   }
 
   clearHand() {

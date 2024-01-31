@@ -17,7 +17,7 @@ const embed = (interaction) => {
   for (let i = 0; i < groupLimit; i++) {
     const member = Array.from(game.playerQueue.keys())[i];
     if (member) {
-      memberPlayingList.push(`:love_letter: **${member.nickname}**`);
+      memberPlayingList.push(`:love_letter: **${member.displayName}**`);
     } else {
       memberPlayingList.push(`:love_letter: *open invitation*`);
     }

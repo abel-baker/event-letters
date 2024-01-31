@@ -1,13 +1,14 @@
 const wait = require('node:timers/promises').setTimeout;
 
-onRoundSetupCompleted = {
-  name: 'roundSetupCompleted',
+onFirstRoundSetupCompleted = {
+  name: 'firstRoundSetupCompleted',
   async execute(game) {
-    console.log(`]> roundSetupCompleted event`);
-    // console.log(`hands`, Array.from(game.players).map(player => player.hand));
-    // console.log(`aside`, game.aside);
-    // console.log(`faceup`, game.faceup);
-    game.channel.send(`:love_letter: First round setup complete.  One card dealt to each player; one card set aside facedown; three cards set aside faceup in two-player games.`);
+    console.log(`]> firstRoundSetupCompleted event`);
+
+    game.channel.sendTyping();
+    await wait(1_000);
+
+    game.channel.send(`:love_letter: The starting player is ${game.currentPlayer().member}`);
 
     await wait(2_000);
     
@@ -19,12 +20,10 @@ onRoundSetupCompleted = {
       await interaction.followUp({
         content: `informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${game.currentPlayer().member == interaction.member? 'are' : 'are not'} the current player.`,
         ephemeral: true
-      })
+      });
     });
-
-
 
   }
 };
 
-module.exports = onRoundSetupCompleted;
+module.exports = onFirstRoundSetupCompleted;

@@ -27,11 +27,22 @@ const replyToBegin = {
     game.invitationMessage.edit({ components: [] });
     
     game.memberLastInteractions.set(interaction.member, interaction);
-    console.log(game.memberLastInteractions);
+    // console.log(game.memberLastInteractions);
     
     await interaction.deferReply();
     await wait(1_000);
-    await interaction.editReply({ content: `:love_letter: Let's begin!` });
+    await interaction.editReply({
+       content: 
+`:love_letter: Let's play a game of **Love Letters**!
+       
+I will deal one card to each player.  On your turn, draw another card \
+and then play one of your two cards.  The goal is to hold the highest \
+value card at the end of the round, or to be the only one left \
+playing after everyone else is eliminated!
+
+I have set one card aside face-down.  In a two-player game, \
+three more cards are laid face-up to shorten the round.`
+    });
     
     // game.beginGame();
     client.emit('gameInitiated', game);

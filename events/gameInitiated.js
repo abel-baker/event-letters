@@ -6,7 +6,7 @@ const onGameInitiated = {
   name: 'gameInitiated',
   execute(game) {
     console.log(`]> gameInitiated event, calling beginGame`);
-    game.channel.send(`:love_letter: Beginning game setup`);
+    // game.channel.send(`:love_letter: Beginning game setup`);
     game.beginGame();
   }
 };

@@ -25,6 +25,7 @@ const slashNewGame = {
     console.log(`Creating new Game from command`, interaction.id);
 
     game.join(interaction.member);
+    game.memberLastInteractions.set(interaction.member, interaction);
 
     game.origin = interaction.id;
     const newEmbed = inviteEmbed(interaction);
