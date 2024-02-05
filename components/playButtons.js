@@ -7,10 +7,10 @@ const buttonShowHand = new ButtonBuilder()
   .setStyle(ButtonStyle.Secondary)
 
 const row = (hand, currentPlayer = false) => {
-  const buttons = []
-  hand.forEach((card, index) => {
+  const buttons = [];
 
-    const newButton = cardButton(card, index, currentPlayer)
+  hand.forEach((card, index) => {
+    const newButton = cardButton(card, index, currentPlayer);
 
     buttons.push(newButton);
   });
