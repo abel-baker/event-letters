@@ -5,6 +5,10 @@ class Card {
     this.name = config.name;
     this.props = config;
   }
+
+  static withEmoji(card) {
+    return `${card.props.value_emoji}${card.props.emoji} **${card.name[0].toUpperCase()}${card.name.slice(1)}**`;
+  }
 }
 
 const Cards = Object.freeze({

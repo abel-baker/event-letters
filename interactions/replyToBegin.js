@@ -28,9 +28,7 @@ const replyToBegin = {
     
     game.memberLastInteractions.set(interaction.member, interaction);
     
-    await interaction.deferReply();
-    await wait(1_000);
-    await interaction.editReply({
+    await interaction.reply({
        content: 
 `:love_letter: Let's play a game of **Love Letters**!
        

@@ -24,9 +24,11 @@ onPlayCompleted = {
 
     // Message the player about their chance to draw
     button = drawButton({ customId: 'drawCard', disabled: false });
+    const card = currentPlayer.hand[0];
 
     const drawOffer = currentPlayer.lastInteraction.followUp({
-      content: `Hey, spooky.  It's your turn, babe`,
+      content: `It's your turn now.  Draw your next card and play one from your hand.  \
+You are currently holding ${card.props.article} **${card.name}**`,
       ephemeral: true,
       components: [new ActionRowBuilder().addComponents([button])]
     });

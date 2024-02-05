@@ -1,4 +1,5 @@
 const wait = require('node:timers/promises').setTimeout;
+const { Card } = require('../classes/Card');
 const playButtonsRow = require('../components/playButtons');
 
 
@@ -26,15 +27,21 @@ onDrawCard = {
     });
 
     // Show draw result to the player and include play buttons
+    const cardRulesList = Array.from(player.hand).map(card => {
+      return `${Card.withEmoji(card)}: ${card.props.rules}`
+    }).join('\n');
     await interaction.followUp({
-      content: `You draw a card. Your hand now has these cards: ${Array.from(player.hand).map(card => card.name).join()}`,
+      content:
+`You draw ${cardDrawn.props.article} **${cardDrawn.name}**.  \
+You are now holding these cards:
+
+${cardRulesList}`,
       ephemeral: true,
       components: [playButtonsRow(player.hand, true)]
     });
 
     game.memberLastInteractions.set(member, interaction);
 
-    // console.log(`what happened this turn: ${player.displayName} drew a card--${cardDrawn.name}`);
   }
 };
 
