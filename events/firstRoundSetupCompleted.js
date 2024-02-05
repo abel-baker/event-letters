@@ -17,7 +17,7 @@ onFirstRoundSetupCompleted = {
     };
 
     // Deal cards, send ephemeral results to each player
-    await wait(1_000);
+    await wait(400);
     // Array.from(game.players).forEach(async player => {
     //   await player.lastInteraction.followUp({
     //     content: `mega informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${player == game.currentPlayer()? 'are' : 'are not'} the current player.`,
@@ -39,8 +39,8 @@ onFirstRoundSetupCompleted = {
     const announceTurn = await game.channel.send(`:love_letter: The starting player is ${currentPlayer.member}`);
     game.currentPlay.announceTurn = announceTurn;
 
-
-    await wait(2_000);
+  
+    await wait(400);
     
     // Now message the players about their cards
     // The current player's message should include buttons to draw for their turn
@@ -50,11 +50,7 @@ onFirstRoundSetupCompleted = {
       const isCurrentPlayer = currentPlayer.member == interaction.member;
 
       if (isCurrentPlayer) {
-        const button = drawButton({ customId: 'await/firstRoundDraw' });
-        //  = new ButtonBuilder()
-        //   .setCustomId(`await/firstRoundDraw`)
-        //   .setLabel(`Draw card`)
-        //   .setStyle(ButtonStyle.Primary);
+        const button = drawButton({ customId: 'drawCard/firstRound', disabled: false });
 
         const drawOffer = await interaction.followUp({
           content: 
@@ -64,34 +60,36 @@ draw your next card and play one of them from your hand.`,
           components: [new ActionRowBuilder().addComponents([button])]
         });
 
-        const collectorFilter = i => i.user.id === interaction.user.id;
+        game.currentPlay.drawOffer = drawOffer;
 
-        try {
-          const drawConfirmation = await drawOffer.awaitMessageComponent({
-            filter: collectorFilter,
-            time: 40_000
-          });
+        // const collectorFilter = i => i.user.id === interaction.user.id;
 
-          if (drawConfirmation.customId === 'await/firstRoundDraw') {
-            game.currentPlay.drawInteraction = drawConfirmation;
-            await drawConfirmation.update({ components: [] });
-            await announceTurn.edit(`${announceTurn.content}.  ${currentPlayer.member} draws a card`);
-            /* We did it
-             - update the general message to say the player drew a card 
-             - draw the card into the player's hand
-             - give them their turn message with play buttons */
-          }
-        } catch (e) {
-          await confirmation.reply({ content: `Confirmation not received`, components: [] });
-        }
+        // try {
+        //   const drawConfirmation = await drawOffer.awaitMessageComponent({
+        //     filter: collectorFilter,
+        //     time: 40_000
+        //   });
+
+        //   if (drawConfirmation.customId === 'collector/firstRoundDraw') {
+        //     game.currentPlay.drawInteraction = drawConfirmation;
+        //     await drawConfirmation.update({ components: [] });
+        //     await announceTurn.edit(`${announceTurn.content}.  ${currentPlayer.member} draws a card`);
+        //     /* We did it
+        //      - update the general message to say the player drew a card 
+        //      - draw the card into the player's hand
+        //      - give them their turn message with play buttons */
+        //   }
+        // } catch (e) {
+        //   await confirmation.reply({ content: `Confirmation not received`, components: [] });
+        // }
 
         return;
       }
 
-      await interaction.followUp({
-        content: `informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${game.currentPlayer().member == interaction.member? 'are' : 'are not'} the current player.`,
-        ephemeral: true
-      });
+      // await interaction.followUp({
+      //   content: `informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${game.currentPlayer().member == interaction.member? 'are' : 'are not'} the current player.`,
+      //   ephemeral: true
+      // });
     });
 
   }

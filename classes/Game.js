@@ -3,23 +3,23 @@ const Player = require('./Player');
 const { Deck, standardDeck } = require('./Deck');
 const { Card } = require('./Card');
 
-/* Game flow:
-- Game is created by /newgame, status set to setup; ->
-- an Invite is created and assigned by /newgame, status set to invitation; 
-- Game begins by beginGame interaction, status set to starting; ->
-- possible ready check of some kind for the players;
-- a round is dealt to Players and turnIndex is set for one of them;
-- round start message is sent ("Let's go, it's sweet william's turn to draw a card"),
-  buttons are presented for drawCard (and others), status is drawing;
-- after drawing, buttons are presented to the player for playCard/cardtype, series of
-  "prompts" via button layouts for playing each card, status is playing;
-- card play executes, changing cards, changing hands, eliminating players,
-  etc., status is resolving (or similar);
-- end condition is checked such as empty deck, only one player remaining:
-  proceed if condition is met, otherwise increment turn index and move
-  to next player's draw phase;
-- after end condition, stop play and send summary/win message;
-*/
+// /* Game flow:
+// - Game is created by /newgame, status set to setup; ->
+// - an Invite is created and assigned by /newgame, status set to invitation; 
+// - Game begins by beginGame interaction, status set to starting; ->
+// - possible ready check of some kind for the players;
+// - a round is dealt to Players and turnIndex is set for one of them;
+// - round start message is sent ("Let's go, it's sweet william's turn to draw a card"),
+//   buttons are presented for drawCard (and others), status is drawing;
+// - after drawing, buttons are presented to the player for playCard/cardtype, series of
+//   "prompts" via button layouts for playing each card, status is playing;
+// - card play executes, changing cards, changing hands, eliminating players,
+//   etc., status is resolving (or similar);
+// - end condition is checked such as empty deck, only one player remaining:
+//   proceed if condition is met, otherwise increment turn index and move
+//   to next player's draw phase;
+// - after end condition, stop play and send summary/win message;
+// */ ^ not accurate anymore
 
 class Game {
   constructor(client, guild, channel) {
@@ -197,6 +197,7 @@ class Game {
   }
   deal(player, count = 1) {
     const dealt = player.drawFrom(this.deck, count);
+    // console.log(`card dealt at Game`, dealt);
     return dealt;
   }
 

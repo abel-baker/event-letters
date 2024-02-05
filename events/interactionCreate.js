@@ -23,7 +23,7 @@ const onInteractionCreate = {
       try {
         // Process the button.
         const id = interaction.customId.split('/')[0];
-        if (id == 'await') return;
+        if (id == 'collector') return;
         
         const action = interaction.client.interactions.get(id);
         await action(interaction);

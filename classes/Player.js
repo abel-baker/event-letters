@@ -31,6 +31,7 @@ class Player {
   }
   drawFrom(deck, count = 1) {
     const drawn = deck.draw(count);
+    // console.log(`card drawn at Player`, drawn);
     this.hand.push(...drawn);
     return drawn;
   }
