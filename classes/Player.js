@@ -9,6 +9,7 @@ class Player {
     this.score = 0;
     this.hand = new Deck();
     this.history = new Array();
+    this.lastInteraction;
   }
 
   get displayName() {
@@ -43,6 +44,10 @@ class Player {
     } else {
       console.log(`${card.name} not found in hand`);
     }
+  }
+
+  setLastInteraction(interaction) {
+    this.lastInteraction = interaction;
   }
 }
 

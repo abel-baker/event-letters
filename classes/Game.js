@@ -74,12 +74,12 @@ class Game {
     this.players = new Set();
     this.turnIndex = 0;
     
-    // Take the top of the playerQueue (members who have opted to play) and add then to the round's
+    // Take the top of the playerQueue (members who have opted to play) and add them to the round's
     // group of Players
     const playersToAdd = Array.from(this.playerQueue.values()).slice(0, config.rules.max_group_size);
     for (const player of playersToAdd) {
       this.players.add(player);
-      console.log(`Adding player`, player.nickname);
+      console.log(`Adding player`, player.displayName);
     }
 
     // await Ready check of some kind?
@@ -205,25 +205,28 @@ class Game {
   ///// PLAYER FUNCTIONS /////
 
   // join the queue (or an open game) to play
-  join(member) {
+  join(interaction) {
+    const member = interaction.member;
     // if member is already queued, disallow them being added again (unless debug is active)
     if (this.playerQueue.has(member)) {
       if (config.debug) {
         const fakeMember = { ...member, displayName: `fake ${member.displayName} ${this.playerQueue.size}`};
         const fakePlayer = new Player(fakeMember);
-        // console.log("Attempting to join", fakeMember, fakePlayer)
         this.playerQueue.set(fakeMember, fakePlayer);
-        // console.log(this.playerQueue);
-        return true;
+        
+        return fakeMember;
       }
 
       return false;
     }
 
     // otherwise, proceed to add the new member to player queue
-    // this.players.set(member, new Player(member));
-    this.playerQueue.set(member, new Player(member));
-    return true;
+    const newPlayer = new Player(member);
+    console.log(`New player joining the game`, newPlayer.displayName);
+    this.playerQueue.set(member, newPlayer);
+    newPlayer.setLastInteraction(interaction);
+
+    return newPlayer;
   }
   leaveQueue(member) {
     // get some relevant conditions
@@ -274,6 +277,13 @@ class Game {
     }
 
     return false;
+  }
+
+  setLastInteraction(interaction, member) {
+    const player = this.playerQueue.get(member);
+
+    this.memberLastInteractions.set(interaction, member);
+    player.setLastInteraction(interaction);
   }
 
   currentPlayer() {

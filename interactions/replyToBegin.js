@@ -1,4 +1,5 @@
 const wait = require('node:timers/promises').setTimeout;
+const prettyJoin = require('../utils/prettyJoin');
 
 const replyToBegin = {
   name: 'replyToBegin',
@@ -22,12 +23,10 @@ const replyToBegin = {
 
     const game = client.games.get(address);
 
-    // defer reply
     // deactivate the invitation ["This game of Love Letters has begun!"]
     game.invitationMessage.edit({ components: [] });
     
     game.memberLastInteractions.set(interaction.member, interaction);
-    // console.log(game.memberLastInteractions);
     
     await interaction.deferReply();
     await wait(1_000);
@@ -40,8 +39,9 @@ and then play one of your two cards.  The goal is to hold the highest \
 value card at the end of the round, or to be the only one left \
 playing after everyone else is eliminated!
 
-I have set one card aside face-down.  In a two-player game, \
-three more cards are laid face-up to shorten the round.`
+I'll set one card aside face-down for the round.  This card usually \
+won't be used.  In a two-player game, three more cards are laid \
+face-up to shorten the round.`
     });
     
     // game.beginGame();

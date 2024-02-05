@@ -26,15 +26,14 @@ const replyToJoin = {
       await interaction.reply({ content: `Doesn't look like there is a game afoot`, ephemeral: true });
       return;
     }
-    const success = game.join(interaction.member);
+    const success = game.join(interaction);
 
     if (success) {
       const newEmbed = inviteEmbed(interaction);
       const newButtons = inviteButtons(interaction);
 
       game.memberLastInteractions.set(interaction.member, interaction);
-      // console.log(game.memberLastInteractions);
-
+    
       await interaction.update({ embeds: [newEmbed], components: [newButtons] });
     } else {
       await interaction.reply({ content: `Unable to join; is there a game and are you already playing it?`, ephemeral: true });
