@@ -225,7 +225,7 @@ class Game {
     const newPlayer = new Player(member);
     console.log(`New player joining the game`, newPlayer.displayName);
     this.playerQueue.set(member, newPlayer);
-    newPlayer.setLastInteraction(interaction);
+    this.setLastInteraction(interaction, member);
 
     return newPlayer;
   }

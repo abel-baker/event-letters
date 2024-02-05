@@ -18,19 +18,21 @@ onFirstRoundSetupCompleted = {
 
     // Deal cards, send ephemeral results to each player
     await wait(400);
-    // Array.from(game.players).forEach(async player => {
-    //   await player.lastInteraction.followUp({
-    //     content: `mega informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${player == game.currentPlayer()? 'are' : 'are not'} the current player.`,
-    //     ephemeral: true
-    //   });
-    // })
-    Array.from(game.memberLastInteractions.values()).forEach(async interaction => {
-      const player = game.memberIsPlaying(interaction.member);
-      await interaction.followUp({
-        content: `informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${player == game.currentPlayer()? 'are' : 'are not'} the current player.`,
+    Array.from(game.players).forEach(async player => {
+      await player.lastInteraction.followUp({
+        content: `mega informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${player == game.currentPlayer()? 'are' : 'are not'} the current player.`,
         ephemeral: true
       });
-    });
+    })
+    // Array.from(game.memberLastInteractions.values()).forEach(async interaction => {
+    //   const player = game.memberIsPlaying(interaction.member);
+    //   console.log(`initial player deal message`, player);
+
+    //   await interaction.followUp({
+    //     content: `informing you of your card(s): ${Array.from(player.hand).map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${player == game.currentPlayer()? 'are' : 'are not'} the current player.`,
+    //     ephemeral: true
+    //   });
+    // });
 
     // Announce whose turn it is
     game.channel.sendTyping();
@@ -43,55 +45,40 @@ onFirstRoundSetupCompleted = {
     await wait(400);
     
     // Now message the players about their cards
-    // The current player's message should include buttons to draw for their turn
-    // game.channel.send(`Informing`)
-    Array.from(game.memberLastInteractions.values()).forEach(async interaction => {
-      const player = game.memberIsPlaying(interaction.member);
-      const isCurrentPlayer = currentPlayer.member == interaction.member;
+//     Array.from(game.memberLastInteractions.values()).forEach(async interaction => {
+//       const player = game.memberIsPlaying(interaction.member);
+//       const isCurrentPlayer = currentPlayer.member == interaction.member;
 
-      if (isCurrentPlayer) {
-        const button = drawButton({ customId: 'drawCard/firstRound', disabled: false });
+//       if (isCurrentPlayer) {
+//         const button = drawButton({ customId: 'drawCard/firstRound', disabled: false });
 
-        const drawOffer = await interaction.followUp({
-          content: 
+//         const drawOffer = await interaction.followUp({
+//           content: 
+// `I dealt you a card: ${player.hand.map(card => card.name).join()}.  It is your turn—\
+// draw your next card and play one of them from your hand.`,
+//           ephemeral: true,
+//           components: [new ActionRowBuilder().addComponents([button])]
+//         });
+
+//         game.currentPlay.drawOffer = drawOffer;
+        
+
+//         return;
+//       }
+//     });
+
+    const player = game.currentPlayer();
+    const button = drawButton({ customId: 'drawCard/firstRound', disabled: false });
+
+    const drawOffer = await player.lastInteraction.followUp({
+      content: 
 `I dealt you a card: ${player.hand.map(card => card.name).join()}.  It is your turn—\
 draw your next card and play one of them from your hand.`,
-          ephemeral: true,
-          components: [new ActionRowBuilder().addComponents([button])]
-        });
-
-        game.currentPlay.drawOffer = drawOffer;
-
-        // const collectorFilter = i => i.user.id === interaction.user.id;
-
-        // try {
-        //   const drawConfirmation = await drawOffer.awaitMessageComponent({
-        //     filter: collectorFilter,
-        //     time: 40_000
-        //   });
-
-        //   if (drawConfirmation.customId === 'collector/firstRoundDraw') {
-        //     game.currentPlay.drawInteraction = drawConfirmation;
-        //     await drawConfirmation.update({ components: [] });
-        //     await announceTurn.edit(`${announceTurn.content}.  ${currentPlayer.member} draws a card`);
-        //     /* We did it
-        //      - update the general message to say the player drew a card 
-        //      - draw the card into the player's hand
-        //      - give them their turn message with play buttons */
-        //   }
-        // } catch (e) {
-        //   await confirmation.reply({ content: `Confirmation not received`, components: [] });
-        // }
-
-        return;
-      }
-
-      // await interaction.followUp({
-      //   content: `informing you of your card(s): ${player.hand.map(card => card.name).join()}.  Turn index ${game.turnIndex}; you ${game.currentPlayer().member == interaction.member? 'are' : 'are not'} the current player.`,
-      //   ephemeral: true
-      // });
+      ephemeral: true,
+      components: [new ActionRowBuilder().addComponents([button])]
     });
 
+    game.currentPlay.drawOffer = drawOffer;
   }
 };
 

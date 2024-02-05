@@ -37,7 +37,7 @@ onPlayCard = {
 
     // Update group's announcement with results of the play
     await wait(400);
-    announcePlay.edit(`${announcePlay.content}. This is what happens:`);
+    announcePlay.edit(`${announcePlay.content}. This is what happens: (nothing, yet)`);
 
     
     await wait(4_000);

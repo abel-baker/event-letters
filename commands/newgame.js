@@ -27,7 +27,7 @@ const slashNewGame = {
     const player = game.join(interaction);
     // player.setLastInteraction(interaction);
     // game.memberLastInteractions.set(interaction.member, interaction);
-    // game.setLastInteraction(interaction, member);
+    // game.setLastInteraction(interaction, interaction.member);
 
     game.origin = interaction.id;
     const newEmbed = inviteEmbed(interaction);
