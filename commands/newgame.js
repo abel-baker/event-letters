@@ -29,7 +29,7 @@ const slashNewGame = {
     // game.memberLastInteractions.set(interaction.member, interaction);
     // game.setLastInteraction(interaction, interaction.member);
 
-    game.origin = interaction.id;
+    game.origin = interaction;
     const newEmbed = inviteEmbed(interaction);
     const row = inviteButtons(interaction);
 

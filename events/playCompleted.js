@@ -8,6 +8,9 @@ onPlayCompleted = {
   name: 'playCompleted',
   async execute(game) {
     console.log(`]> playCompleted event`);
+    
+    // Advance turnIndex to the next player and emit round setup complete?
+    game.advancePlayer();
 
     const currentPlayer = game.currentPlayer();
     game.currentPlay = {
@@ -28,7 +31,7 @@ onPlayCompleted = {
 
     const drawOffer = currentPlayer.lastInteraction.followUp({
       content: `It's your turn now.  Draw your next card and play one from your hand.  \
-You are currently holding ${card.props.article} **${card.name}**`,
+You are currently holding ${card.props.article} **${card.name}**.`,
       ephemeral: true,
       components: [new ActionRowBuilder().addComponents([button])]
     });

@@ -1,4 +1,5 @@
 const wait = require('node:timers/promises').setTimeout;
+const { ActionRowBuilder, UserSelectMenuBuilder } = require('discord.js');
 const { Card } = require('../classes/Card');
 const playButtonsRow = require('../components/playButtons');
 
@@ -26,6 +27,11 @@ onDrawCard = {
       components: []
     });
 
+    // const userSelect = new UserSelectMenuBuilder()
+    //   .setCustomId('users')
+    //   .setPlaceholder('Select a target player...');
+    // const userSelectRow = new ActionRowBuilder().addComponents(userSelect);
+
     // Show draw result to the player and include play buttons
     const cardRulesList = Array.from(player.hand).map(card => {
       return `${Card.withEmoji(card)}: ${card.props.rules}`
@@ -37,7 +43,7 @@ You are now holding these cards:
 
 ${cardRulesList}`,
       ephemeral: true,
-      components: [playButtonsRow(player.hand, true)]
+      components: [playButtonsRow(player.hand, true)] // [ , userSelectRow]
     });
 
     game.memberLastInteractions.set(member, interaction);

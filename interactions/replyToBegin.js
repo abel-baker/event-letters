@@ -33,8 +33,8 @@ const replyToBegin = {
 `:love_letter: Let's play a game of **Love Letters**!
        
 I will deal one card to each player.  On your turn, draw another card \
-and then play one of your two cards.  The goal is to hold the highest \
-value card at the end of the round, or to be the only one left \
+and then play one of the two you are holding.  The goal is to hold the \
+highest value card at the end of the round, or to be the only one left \
 playing after everyone else is eliminated!
 
 I'll set one card aside face-down for the round.  This card usually \
