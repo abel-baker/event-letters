@@ -1,8 +1,6 @@
-const wait = require('node:timers/promises').setTimeout;
-const { ActionRowBuilder, UserSelectMenuBuilder } = require('discord.js');
 const { Card } = require('../classes/Card');
 const playButtonsRow = require('../components/playButtons');
-
+const actionButtonsArray = require('../components/actionButtonsArray');
 
 onDrawCard = {
   name: 'drawCard',
@@ -36,14 +34,19 @@ onDrawCard = {
     const cardRulesList = Array.from(player.hand).map(card => {
       return `${Card.withEmoji(card)}: ${card.props.rules}`
     }).join('\n');
+
+    const actionButtons = actionButtonsArray(player.hand, game, game.currentPlay);
+    
     await interaction.followUp({
       content:
 `You draw ${cardDrawn.props.article} **${cardDrawn.name}**.  \
 You are now holding these cards:
 
 ${cardRulesList}`,
+
       ephemeral: true,
-      components: [playButtonsRow(player.hand, true)] // [ , userSelectRow]
+      // components: [playButtonsRow(player.hand, true)] // [ , userSelectRow]
+      components: actionButtons
     });
 
     game.memberLastInteractions.set(member, interaction);

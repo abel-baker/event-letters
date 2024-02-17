@@ -6,6 +6,7 @@ class Player {
     this.member = member;
 
     this.eliminated = false;
+    this.handmaided = false;
     this.score = 0;
     this.hand = new Deck();
     this.history = new Array();
