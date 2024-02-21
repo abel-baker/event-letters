@@ -10,7 +10,7 @@ const embed = (interaction) => {
 
   const out = {
     color: config.embed_color,
-    thumbnail: { url: currentMember.user.displayAvatarURL() },
+    thumbnail: { url: currentMember.displayAvatarURL() },
 
     author: {
       name: `${currentMember.nickname}'s turn`,

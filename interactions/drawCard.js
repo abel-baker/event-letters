@@ -1,4 +1,5 @@
 const { Card } = require('../classes/Card');
+const config = require('../config.json');
 const playButtonsRow = require('../components/playButtons');
 const actionButtonsArray = require('../components/actionButtonsArray');
 
@@ -17,8 +18,26 @@ onDrawCard = {
     game.currentPlay.drawResult = { card: cardDrawn };
     
     // Update group's announcement of starting player
-    const announceTurn = game.currentPlay.announceTurn;
-    announceTurn.edit(`${announceTurn.content}.  ${player.displayName} draws a card.`);
+    // const announceTurn = game.currentPlay.announceTurn;
+    // announceTurn.edit(`${announceTurn.content}.  ${player.displayName} draws a card.`);
+
+
+    const announceDraw = await game.channel.send({
+      // content: `:love_letter: ${player.displayName}`,
+      embeds: [
+        {
+          color: config.embed_color_draw,
+          // thumbnail: { url: member.displayAvatarURL() },
+
+          // description: `${player.displayName} draws a card.`,
+          footer: {
+            icon_url: member.displayAvatarURL(),
+            text: `${player.displayName} draws a card.`
+          }
+        }
+      ]
+    });
+
     
     // Remove draw button
     await interaction.update({
@@ -37,6 +56,8 @@ onDrawCard = {
 
     const actionButtons = actionButtonsArray(player.hand, game, game.currentPlay);
     
+    console.log(game.currentPlay.selectedCard, game.currentPlay.selectedPlayer, game.currentPlay.selectedToken);
+
     await interaction.followUp({
       content:
 `You draw ${cardDrawn.props.article} **${cardDrawn.name}**.  \
