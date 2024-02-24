@@ -20,8 +20,8 @@ onPlayCompleted = {
     };
 
     // Announce whose turn it is
-    const announceTurn = await game.channel.send(`:love_letter: The next player is ${currentPlayer.member}`);
-    game.currentPlay.announceTurn = announceTurn;
+    // const announceTurn = await game.channel.send(`:love_letter: The next player is ${currentPlayer.member}`);
+    // game.currentPlay.announceTurn = announceTurn;
 
     await wait(400);
 

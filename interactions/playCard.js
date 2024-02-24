@@ -34,7 +34,7 @@ onPlayCard = {
 
       author: {
         name: `${member.displayName} plays ${cardPlayed.props.article} ${cardPlayed.name}...`,
-        iconURL: interaction.member.displayAvatarURL()
+        iconURL: member.displayAvatarURL()
       },
 
       description: `but nothing happens (yet).`,

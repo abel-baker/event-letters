@@ -1,6 +1,5 @@
 const { Card } = require('../classes/Card');
 const config = require('../config.json');
-const playButtonsRow = require('../components/playButtons');
 const actionButtonsArray = require('../components/actionButtonsArray');
 
 onDrawCard = {
@@ -22,7 +21,7 @@ onDrawCard = {
     // announceTurn.edit(`${announceTurn.content}.  ${player.displayName} draws a card.`);
 
 
-    const announceDraw = await game.channel.send({
+    game.currentPlay.announceDraw = await game.channel.send({
       // content: `:love_letter: ${player.displayName}`,
       embeds: [
         {

@@ -1,22 +1,23 @@
 const { ActionRowBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 const { Cards } = require('../classes/Card');
 const button = require('./button');
+const config = require('../config.json');
 
 const array = (hand, game, currentPlay) => {
   const out = [];
 
   // Primary action buttons (card buttons)
   const primaryButtons = [];
-  const selectedCard = currentPlay?.cardSelected;
+  const selectedCard = currentPlay?.selectedCard;
 
-  hand.forEach((card) => {
+  hand.forEach((card, index) => {
     // label depends on: name, whether the card needs a target, whether the card is selected
     // [#] Play Name( on)(...)
     // i.e. [4] Play Handmaid
     //      [5] Play Prince...
     //      [5] Play Prince on...
     let label = ` Play ${card.name.charAt(0).toUpperCase() + card.name.slice(1)}`;
-    if (card == selectedCard) label = label + ' on';
+    if (card.name == selectedCard?.name) label = label + ' on';
     if (card.props.requires_target) label = label + '...';
 
     // id depends on: what parameters are needed to complete a play action, if there's a 
@@ -52,10 +53,29 @@ const array = (hand, game, currentPlay) => {
     // - if it's selected, clicking the button again resets/deselects it and just displays
     //   the default set of buttons
     // - if it's not selected, playCard/cardName boom done
-    
-    const id = card == selectedCard ?
-      `updateActionButtons`
-      : `playCard/${card.name}`;
+
+    // console.log(game.currentPlay.selectedCard?.name, game.currentPlay.selectedPlayer, game.currentPlay.selectedToken?.name);
+
+    // const id = card.props.requires_target ?
+    //   card == selectedCard ? `playCard/${card.name}`
+    //     : `updateActionButtons/${card.name}`
+    //   : `playCard/${card.name}`;
+
+    // const calcId = () => {
+    //   if (card.props.requires_target) {
+
+    //     if (card.name == selectedCard?.name) {
+    //       return `selectAction/card`;
+    //     } else {
+    //       return `selectAction/card/${card.name}`;
+    //     }
+
+    //   } else {
+    //     return `playCard/${card.name}`;
+    //   }
+    // }
+
+    const id = `selectAction/card/${index}`;
 
 
     // color depends on: princess?, whether card is selected, whether ANOTHER card is selected
@@ -86,6 +106,8 @@ const array = (hand, game, currentPlay) => {
       : true
     ;
 
+    console.log(`Making button ${id} ${label}`);
+
     const newButton = button({
       label, id, style,
       emoji: card.props.value_emoji,
@@ -102,16 +124,23 @@ const array = (hand, game, currentPlay) => {
   if (selectedCard && selectedCard.props.requires_target) {
     const secondaryButtons = [];
     const activePlayers = Array.from(game.players).filter(player => !player.eliminated);
+    // store active players for retrieval by selectAction and playCard
+    game.currentPlay.activePlayers = activePlayers;
     
     activePlayers.forEach((player) => {
-      const label = player.displayName();
-      const id = `playCard/${selectedCard.name}/${Array.from(game.players).indexOf(player)}`;
+      const label = player.displayName;
+      // const id = `playCard/${selectedCard.name}/${Array.from(game.players).indexOf(player)}`;
+      const id = `selectAction/player/${activePlayers.indexOf(player)}`;
 
       const emoji = player.handmaided ? Cards['HANDMAID'].props.emoji : null;
+      const enabled = player != currentPlay.player;
+
+      console.log(`Making button ${id} ${label}`);
 
       const playerButton = button({
         label, id, emoji,
         style: ButtonStyle.Primary,
+        disabled: !enabled
       });
 
       secondaryButtons.push(playerButton);
@@ -121,23 +150,34 @@ const array = (hand, game, currentPlay) => {
   }
 
 
-  // Tertiary item select (card select)
-  const selectedPlayer = currentPlay?.playerSelected;
+  // Tertiary item select (card select) // Only if guard selected AND player selected
+  const selectedPlayer = currentPlay?.selectedPlayer;
   if (selectedPlayer && selectedCard.props.requires_token) {
     const cardSelectList = [];
 
-    for (let card in Cards.entries()) {
-      if (card.name == 'guard') continue;
+    for (const card in config.cards) {
+      const name = config.cards[card].name;
+      const rules = config.cards[card].rules;
+      const emoji = config.cards[card].emoji;
+      const value_emoji = config.cards[card].value_emoji;
+
+      if (config.cards[card].name == 'guard') {
+        console.log(`Skipping guard option`);
+        continue;
+      };
+
+      console.log(`Adding option ${name} ${rules}`);
 
       cardSelectList.push(new StringSelectMenuOptionBuilder()
-        .setCustomId(card.name)
-        .setValue(card.name)
-        .setDescription(card.props.rules)
+        .setLabel(`${name.charAt(0).toUpperCase() + name.slice(1)}`)
+        .setEmoji(`${value_emoji}`)
+        .setValue(`${name}`)
+        // .setDescription(`${rules}`)
       );
     }
 
     const cardSelect = new StringSelectMenuBuilder()
-      .setCustomId('token')
+      .setCustomId(`selectAction/token`)
       .setPlaceholder(`Accuse ${selectedPlayer.displayName} of holding...`)
       .addOptions(cardSelectList);
 

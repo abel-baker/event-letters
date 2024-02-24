@@ -18,10 +18,23 @@ const onInteractionCreate = {
       return;
     }
 
-    if (interaction.isButton()) {
+    // if (interaction.isStringSelectMenu()) {
+    //   try {
+    //     const id = interaction.customId.split('/')[0];
+
+    //     const action = interaction.client.interactions.get(id);
+    //     await action(interaction);
+
+    //     return;
+    //   } catch (err) {
+    //     console.error(err);
+    //     await interaction.reply({ content: `There was an error executing menu select: ${interaction.customId}`, ephemeral: true });
+    //   }
+    // }
+
+    if (interaction.isButton() || interaction.isStringSelectMenu()) {
 
       try {
-        // Process the button.
         const id = interaction.customId.split('/')[0];
         if (id == 'collector') return;
         
